@@ -2,6 +2,7 @@ import { GetStaticPaths, GetStaticProps, NextPage } from 'next'
 import { ParsedUrlQuery } from 'querystring'
 import Layout from '../../components/Layout'
 import { Post } from '../../types'
+import React from 'react'
 
 interface PostPageProps {
   post: Post | null
@@ -35,7 +36,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     params: { id: post.id.toString() }
   }))
 
-  return { paths, fallback: 'blocking' }
+  return { paths, fallback: true }
 }
 
 export const getStaticProps: GetStaticProps<PostPageProps, Params> = async (context) => {

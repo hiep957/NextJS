@@ -4,6 +4,10 @@ import { GetServerSideProps } from "next";
 import Layout from "../../components/Layout";
 import Link from "next/link";
 import Image from "next/image";
+import dynamic from "next/dynamic";
+import React from "react";
+// import Footer from "@/components/Footer";
+// const Footer = dynamic(() => import("@/components/Footer"), { ssr: false });
 interface Product {
   id: number;
   name: string;
@@ -30,6 +34,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 const ProductsPage: React.FC<ProductsProps> = ({ products }) => {
   return (
     <Layout>
+      {/* <Footer></Footer> */}
       <div className="max-w-6xl mx-auto px-4 py-8 bg-gray-100">
         <h1 className="text-3xl font-bold mb-6 text-gray-800">Our Products</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

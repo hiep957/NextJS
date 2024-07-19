@@ -4,6 +4,7 @@ import { GetServerSideProps } from "next";
 import Layout from "../../components/Layout";
 import Link from "next/link";
 import Image from "next/image";
+import React from "react";
 interface Product {
   id: number;
   name: string;
@@ -67,19 +68,19 @@ const ProductPage: React.FC<ProductProps> = ({ product }) => {
                   Thông số kỹ thuật
                 </div>
                 <div>
-                  <span className="font-bold">Công nghệ màn hình: </span>Amoled
+                  <span className="font-bold">Công nghệ màn hình </span>Amoled
                 </div>
                 <div>
-                  <span className="font-bold">Độ phân giải: </span>2670 x 1200
+                  <span className="font-bold">Độ phân giải </span>
                 </div>
                 <div>
-                  <span className="font-bold">Kích thước màn hình: </span>6.36"
+                  <span className="font-bold">Kích thước màn hình </span>636
                 </div>
                 <div>
-                  <span className="font-bold">Số khe SIM: </span>2
+                  <span className="font-bold">Số khe SIM </span>2
                 </div>
                 <div>
-                  <span className="font-bold">Dung lượng pin sản phẩm: </span>4610mAh
+                  <span className="font-bold">Dung lượng pin sản phẩm </span>4610mAh
                 </div>
               </div>
             </div>

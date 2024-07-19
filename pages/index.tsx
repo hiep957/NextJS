@@ -3,7 +3,8 @@ import Link from "next/link";
 import Layout from "../components/Layout";
 // import PostCard from '../components/PostCard'
 import { Post } from "../types";
-import PostCard from "@/components/PostCard";
+import PostCard from "../components/PostCard";
+import React from "react";
 
 interface HomeProps {
   posts: Post[];
@@ -23,6 +24,7 @@ const Home: NextPage<HomeProps> = ({ posts }) => {
           Create New Post
         </a>
       </Link>
+      <Link href="/products/:slug">About</Link>
     </Layout>
   );
 };
@@ -30,12 +32,12 @@ const Home: NextPage<HomeProps> = ({ posts }) => {
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
     // Sử dụng URL tuyệt đối khi chạy trên server
-    const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
-    const host = process.env.VERCEL_URL || "localhost:3000";
+    const protocol = "http";
+    const host = "localhost:3000";
     const url = `${protocol}://${host}/api/posts`;
 
     const res = await fetch(url);
-    
+
     if (!res.ok) {
       throw new Error(`Failed to fetch posts, status: ${res.status}`);
     }
