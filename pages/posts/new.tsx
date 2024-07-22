@@ -2,6 +2,7 @@ import { NextPage } from 'next'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import Layout from '../../components/Layout'
+import React from 'react'
 
 const NewPost: NextPage = () => {
   const [title, setTitle] = useState('')
