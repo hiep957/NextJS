@@ -1,21 +1,34 @@
-import { NextRequest, NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
+import { redirect } from "next/dist/server/api-utils";
+import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
+import { jwtVerify } from "jose";
 
-export async function middleware(req: NextRequest) {
-  const token = req.cookies["token"];
+export async function middleware(
+  req: NextRequest & { userId: any },
+  ev: NextFetchEvent
+) {
+  console.log("Middleware is working");
+  const token = req.cookies.get("token");
   console.log(token);
-  console.log("đa vào đây");
   if (!token) {
-    return NextResponse.redirect("/register");
+    return NextResponse.redirect(new URL("/register", req.url), 302);
   }
 
   try {
-    jwt.verify(token, process.env.JWT_SECRET!);
-  } catch (error) {
-    return NextResponse.redirect("/register");
+    const { payload } = await jwtVerify(
+      token,
+      new TextEncoder().encode(process.env.JWT_SECRET)
+    );
+    const userId = payload.userId;
+    const response = NextResponse.next();
+    response.cookies.set("userId", userId);
+    return response;
+  } catch (e) {
+    console.log("Lỗi rồi", e);
+    return NextResponse.redirect(new URL("/register", req.url), 302);
   }
+  // return Response.redirect("http://localhost:3000");
 }
 
 export const config = {
-  matcher: ["/dashboard"],
+  matcher: ["/dashboard/:path*"],
 };

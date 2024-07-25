@@ -8,24 +8,21 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   output: "standalone",
-  // https://www.facebook.com/
   // async redirects() {
   //   return [
   //     {
-  //       source: '/about',
+  //       source: '/dashboard',
+  //       has: [
+  //         {
+  //           type: 'cookie',
+  //           key: 'token',
+  //         },
+  //       ],
   //       destination: '/',
-  //       permanent: true,
+  //       permanent: false,
   //     },
   //   ];
-  // }
-  // async rewrites() {
-  //   return [
-  //     {
-  //       source: '/products/:slug',
-  //       destination: '/',
-  //     },
-  //   ];
-  // }
+  // },
 };
 
 export default nextConfig;

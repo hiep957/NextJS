@@ -9,14 +9,16 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
+
+  // fetch 
   return (
-    <div className="container mx-auto px-4">
+    <div className="container mx-auto ">
       <Head>
         <title>My Blog</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />
-      <main className="py-8">{children}</main>
+      <main className="px-8 mt-2 mb-2">{children}</main>
       <Footer></Footer>
     </div>
   );
