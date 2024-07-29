@@ -27,7 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ message: 'Password Incorrent!' });
     }
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, { expiresIn: '1d' });
+    const token = jwt.sign({ userInfo: user }, process.env.JWT_SECRET!, { expiresIn: '1d' });
 
     res.setHeader('Set-Cookie', cookie.serialize('token', token, {
       httpOnly: true,

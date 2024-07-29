@@ -1,5 +1,5 @@
 export interface Post {
-    id: number;
+    _id: number;
     title: string;
     content: string;
     createdAt: string;
@@ -7,6 +7,7 @@ export interface Post {
       name: string;
       avatar: string;
     };
+    thumbnail: string;
     date: string;
     tag: string[];
   }

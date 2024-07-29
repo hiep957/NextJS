@@ -9,19 +9,18 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-
-  // fetch 
   return (
-    <div className="container mx-auto ">
-      <Head>
-        <title>My Blog</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+    <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="px-8 mt-2 mb-2">{children}</main>
-      <Footer></Footer>
+      <div className="flex-grow relative bg-color1">
+        <div className="absolute inset-x-0 top-0 h-1/2 bg-custom-gradient"></div>
+        <div className="container mx-auto relative z-10">
+          <main className="px-8 py-4">{children}</main>
+        </div>
+      </div>
+      <Footer />
     </div>
   );
-}
+};
 
 export default Layout;

@@ -32,7 +32,7 @@ const RegisterForm = () => {
       });
 
       if (res.ok) {
-        router.push("/dashboard");
+        router.push("/");
       } else {
         const error = await res.json();
         setError(error.message);

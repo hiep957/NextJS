@@ -1,21 +1,24 @@
-import { ca } from "date-fns/locale";
-import { set } from "mongoose";
-import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
+import { useRouter } from "next/router";
+import { useForm, Controller } from "react-hook-form";
+import {
+  Avatar,
+  Button,
+  CssBaseline,
+  TextField,
+  FormControlLabel,
+  Checkbox,
+  Link,
+  Grid,
+  Box,
+  Typography,
+  Container,
+  createTheme,
+  ThemeProvider,
+} from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import ModalValidation from "./ModalValidation";
+import {toast} from 'react-toastify';
 export type FormData = {
   name: string;
   email: string;
@@ -40,22 +43,78 @@ function Copyright(props: any) {
     </Typography>
   );
 }
+
 const defaultTheme = createTheme();
 
 const Form = () => {
+  const [open, setOpen] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [formData, setFormData] = useState<FormData | null>(null);
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   const {
-    register,
-    handleSubmit,
     control,
+    handleSubmit,
     formState: { errors },
     watch,
   } = useForm<FormData>();
 
-  const [error, setError] = useState("");
+
 
   const router = useRouter();
 
-  const onSubmit = async (data: FormData) => {
+  const sendOTP = async (data: FormData) => {
+    try {
+      // Simulate sending OTP
+      const res = await fetch("/api/email/send-validation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: data.email }),
+      });
+      if (res.ok) {
+        toast.success('OTP đã được gửi đi');
+        console.log("Sending OTP to", data.email);
+        setOtpSent(true);
+        setFormData(data);
+        handleOpen();
+      }
+    } catch (err) {
+      toast.error(err.message);
+ 
+    }
+  };
+
+  const verifyOTP = async () => {
+    try {
+      // Simulate OTP verification
+      console.log("Verifying OTP", otp);
+      const res = await fetch("/api/email/verify-code", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: formData?.email, code: otp }),
+      });
+
+      if (res.ok) {
+        // Replace with actual OTP verification
+        toast.success('Xác thực thành công');
+        handleClose();
+        if (formData) {
+          await registerUser(formData);
+        }
+      } else {
+        toast.error('Mã OTP không hợp lệ');
+     
+      }
+    } catch (err) {
+      toast.error(err.message);
+     
+    }
+  };
+
+  const registerUser = async (data: FormData) => {
     try {
       const res = await fetch("/api/auth/register", {
         method: "POST",
@@ -64,13 +123,17 @@ const Form = () => {
       });
 
       if (res.ok) {
+        toast.success('Đăng ký thành công');
         router.push("/dashboard");
       } else {
+        
         const error = await res.json();
-        setError(error.message);
+        toast.error("Đăng ký thất bại: "+ error.message);
+        
       }
     } catch (err) {
-      setError("Something went wrong");
+      toast.error(err.message);
+     
     }
   };
 
@@ -95,7 +158,7 @@ const Form = () => {
 
           <Box
             component="form"
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={handleSubmit(sendOTP)}
             noValidate
             sx={{ mt: 3 }}
           >
@@ -187,7 +250,6 @@ const Form = () => {
                   )}
                 />
               </Grid>
-
               <Grid item xs={12}>
                 <Controller
                   name="confirmPassword"
@@ -244,6 +306,16 @@ const Form = () => {
         </Box>
         <Copyright sx={{ mt: 5 }} />
       </Container>
+
+      <ModalValidation
+        open={open}
+        handleClose={handleClose}
+        otp={otp}
+        setOtp={setOtp}
+        verifyOTP={verifyOTP}
+      />
+
+      
     </ThemeProvider>
   );
 };

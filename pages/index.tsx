@@ -1,49 +1,94 @@
-import type { GetServerSideProps, NextPage } from "next";
-import Link from "next/link";
+import React, { useEffect } from "react";
 import Layout from "../components/Layout";
+import { Box, Container, Grid, Typography } from "@mui/material";
+import TestCard from "../components/testCard";
+import { useUser } from "../lib/UserContext";
+import { useRouter } from "next/router";
+import { GetServerSideProps } from "next";
 import { Post } from "../types";
-import PostCard from "../components/PostCard";
-import React from "react";
-import { Button, Grid, Typography } from "@mui/material";
+// export interface Post {
+//     _id: number;
+//     title: string;
+//     content: string;
+//     createdAt: string;
+//     author: {
+//       name: string;
+//       avatar: string;
+//     };
+//     date: string;
+//     tag: string[];
+//   }
+const HomePage = ({ posts }) => {
+  const { user, setUser } = useUser();
+  const router = useRouter();
+  useEffect(() => {
+    const verifyToken = async () => {
+      try {
+        const response = await fetch("/api/auth/verify-token", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include", // Để gửi cookie cùng với request
+        });
 
-interface HomeProps {
-  posts: Post[];
-}
+        const data = await response.json();
+        console.log("data: ", data);
+        if (!data.isValid) {
+          router.push("/login");
+        } else {
+          setUser(data.user);
+        }
+      } catch (error) {
+        console.error("Error verifying token:", error);
+        router.push("/login");
+      }
+    };
 
-const Home: NextPage<HomeProps> = ({ posts }) => {
+    verifyToken();
+  }, []);
   return (
     <Layout>
-      <Typography variant="h4" className="font-bold mb-4">
-        Latest Posts
-      </Typography>
-      <Grid container spacing={4}>
-        {posts.map((post) => (
-          <Grid item xs={12} sm={6} md={4} key={post.id}>
-            <PostCard post={post} />
+      <Container className="">
+        <Grid container spacing={4} className="">
+          <Grid item xs={12} sm={9} className="flex-row">
+            <h1 className="mt-2">Home Page</h1>
+            <Typography variant="h4" className="font-bold mb-4 mt-2">
+              Blog
+            </Typography>
+            <Grid container spacing={4} className="mt-4">
+              {posts.map((post: Post) => (
+                <Grid xs={12} sm={6} className="mb-8">
+                  <TestCard content={true} post={post} />
+                </Grid>
+              ))}
+            </Grid>
+              {/* <TestCard content={true} posts={posts} />
+              <TestCard content={true} /> */}
+            {/* {posts.map((post: Post) => (
+              <Grid xs={12} sm={6}>
+                <TestCard content={true} post={post} />
+              </Grid>
+            ))} */}
+            {/* <TestCard content={true} posts={posts} />
+              <TestCard content={true} /> */}
           </Grid>
-        ))}
-      </Grid>
-      <div className="mt-4 flex space-x-4">
-        <Link href="/posts/new" passHref>
-          <Button
-            variant="contained"
-            color="primary"
-            className="bg-blue-500 text-white"
-          >
-            Create New Post
-          </Button>
-        </Link>
-        <Link href="/products/:slug" passHref>
-          <Button variant="outlined" className="text-blue-500 border-blue-500">
-            About
-          </Button>
-        </Link>
-        <Link href="/dashboard" passHref>
-          <Button variant="outlined" className="text-blue-500 border-blue-500">
-            Go to Dashboard
-          </Button>
-        </Link>
-      </div>
+
+          <Grid item sm={3} xs={12} className="">
+            <div className="flex justify-center font-bold mb-2">
+              Những bài posts gần đây
+            </div>
+            <div className="">
+              <div className="mb-4">
+                <TestCard content={false} post={posts[0]} />
+              </div>
+              <div>
+                <TestCard content={false} post={posts[1]} />
+              </div>
+            </div>
+          </Grid>
+        </Grid>
+      </Container>
     </Layout>
   );
 };
@@ -68,4 +113,4 @@ export const getServerSideProps: GetServerSideProps = async () => {
   }
 };
 
-export default Home;
+export default HomePage;

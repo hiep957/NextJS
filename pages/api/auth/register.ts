@@ -33,7 +33,7 @@ export default async function handler(
       password: hashedPassword,
     });
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, {
+    const token = jwt.sign({ userInfo: user }, process.env.JWT_SECRET!, {
       expiresIn: "1d",
     });
 

@@ -3,6 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   images: {
     domains: ['cdn.hoanghamobile.com'],
+    domains: ['blog.estudyme.com']
   },
   typescript: {
     ignoreBuildErrors: true,

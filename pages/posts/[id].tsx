@@ -119,27 +119,43 @@ const PostPage: NextPage<PostPageProps> = ({ post }) => {
           <CourseList></CourseList>
         </Grid>
       </Grid>
+      
     </Layout>
   );
 };
 
-export const getServerSideProps: GetServerSideProps<
-  PostPageProps,
-  Params
-> = async (context) => {
+export const getStaticPaths: GetStaticPaths = async () => {
+  try {
+    const res = await fetch("http://localhost:3000/api/posts");
+    const posts: Post[] = await res.json();
+
+    const paths = posts.map((post) => ({
+      params: { id: post._id.toString() },
+    }));
+
+    return { paths, fallback: false };
+  } catch (error) {
+    console.error("Lỗi khi fetch danh sách bài viết:", error);
+    return { paths: [], fallback: false };
+  }
+};
+
+export const getStaticProps: GetStaticProps<PostPageProps, Params> = async (
+  context
+) => {
   const { id } = context.params!;
 
   try {
+    console.time("fectchPostData");
     const res = await fetch(`http://localhost:3000/api/posts?id=${id}`);
-
+    
     if (!res.ok) {
       console.error(`Error fetching post: ${res.status} ${res.statusText}`);
       return { props: { post: null } };
     }
 
-    const posts: Post[] = await res.json();
-    const post = posts.find((p) => p.id === Number(id));
-
+    const post = await res.json();
+    console.timeEnd("fectchPostData");
     if (!post) {
       console.error(`Post with id ${id} not found`);
       return { props: { post: null } };

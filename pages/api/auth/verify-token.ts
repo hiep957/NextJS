@@ -10,11 +10,13 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   }
   console.log("verify-token.ts: ", token);
   try {
-    jwt.verify(token, process.env.JWT_SECRET!);
-    return res.status(200).json({ isValid: true });
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+    const user: any = (decoded as any).userInfo;
+    console.log("verify-token.ts UserId: ", user);
+    return res.status(200).json({ isValid: true, user: user });
   } catch (error) {
     return res.status(401).json({ isValid: false, message: 'Invalid token' });
   }
 }
 
-// middleware.ts
+

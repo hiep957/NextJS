@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { format } from 'date-fns';
 interface Post {
-  id: number;
+  _id: number;
   title: string;
   content: string;
   createdAt: string;
@@ -16,10 +16,10 @@ interface PostCardProps {
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
   const formattedDate = format(new Date(post.createdAt), 'MM/dd/yyyy');
   return (
-    <div className="bg-white shadow-md rounded-lg overflow-hidden">
-      <div className="p-4">
+    <div className="bg-white shadow-md rounded-lg overflow-hidden flex flex-col justify-between ">
+      <div className="p-4 h-[200px]">
         <h2 className="text-xl font-semibold mb-2">
-          <Link href={`/posts/${post.id}`} legacyBehavior>
+          <Link href={`/posts/${post._id}`} passHref>
             <a className="text-blue-600 hover:text-blue-800">{post.title}</a>
           </Link>
         </h2>
@@ -29,7 +29,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
         <p className="text-gray-700 line-clamp-3">{post.content}</p>
       </div>
       <div className="bg-gray-100 px-4 py-2">
-        <Link href={`/posts/${post.id}`} legacyBehavior>
+        <Link href={`/posts/${post._id}`} passHref>
           <a className="text-blue-600 hover:text-blue-800 text-sm font-medium">
             Read more
           </a>

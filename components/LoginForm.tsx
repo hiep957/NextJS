@@ -66,7 +66,7 @@ export default function LoginForm() {
 
       if (res.ok) {
         toast.success('Đăng nhập thành công');
-        router.push("/dashboard");
+        window.open('/', '_self');
       } else {
         
         const error = await res.json();
