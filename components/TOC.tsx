@@ -10,6 +10,7 @@ interface Heading {
 const TableOfContents: React.FC = () => {
   const [headings, setHeadings] = useState<Heading[]>([]);
   const [activeId, setActiveId] = useState<string>("");
+  // const [scrollY, setScrollY] = useState(0);
   const router = useRouter();
 
   useEffect(() => {
@@ -39,7 +40,7 @@ const TableOfContents: React.FC = () => {
           }
         });
       },
-      { rootMargin: "-50px 0% -55% 0%", threshold: 1 }
+      { rootMargin: "50px 0% -55% 0%", threshold: 1 }
     );
 
     elements.forEach((elem) => observer.observe(elem));
@@ -51,7 +52,16 @@ const TableOfContents: React.FC = () => {
     const element = document.getElementById(id);
     if (element) {
       setActiveId(id);
-      element.scrollIntoView({ behavior: "smooth" });
+      // element.scrollIntoView({ behavior: "smooth" });
+      const headerOffset = 100; // Điều chỉnh giá trị này dựa trên chiều cao của header
+      const elementPosition =
+        element.getBoundingClientRect().top + window.pageYOffset;
+      const offsetPosition = elementPosition - headerOffset;
+      console.log("offsetPosition", offsetPosition);
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
       router.push(`#${id}`, undefined, { shallow: true });
     }
   };
