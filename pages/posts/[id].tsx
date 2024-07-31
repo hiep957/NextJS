@@ -16,9 +16,12 @@ import {
   Avatar,
   Box,
   Grid,
+  Table,
 } from "@mui/material";
 import { format } from "date-fns";
+import { text } from "../../lib/Text";
 import CourseList from "../../components/CourseList";
+import TableOfContents from "../../components/TOC";
 interface PostPageProps {
   post: Post | null;
 }
@@ -44,6 +47,7 @@ const PostPage: NextPage<PostPageProps> = ({ post }) => {
             variant="h3"
             component="h1"
             className="mb-4 text-4xl font-bold"
+            id="title1"
           >
             {post.title}
           </Typography>
@@ -68,17 +72,23 @@ const PostPage: NextPage<PostPageProps> = ({ post }) => {
             ))}
           </Box>
           <Divider className="my-6" />
+
+          <Typography variant="h4" id="section1">1. Giới thiệu</Typography>
+
           <Typography variant="body1" className="mb-8 text-lg leading-relaxed">
             {post.content}
           </Typography>
+
+          <Typography variant="h4" id="section2">2. Tính năng</Typography>
           <Typography variant="body1" className="mb-8 text-lg leading-relaxed">
-            Trong kho tài nguyên phong phú của dịch vụ này, người dùng có thể
-            tìm gì cũng có, từ phim hay, phần mềm, ứng dụng đến tài liệu học tập
-            và công việc. Khả năng tải nhanh và tải tốc độ cao giúp người dùng
-            không phải chờ đợi lâu, đồng thời cung cấp trải nghiệm mượt mà và
-            hài lòng. Download không giới hạn cho phép người dùng tải về bất kỳ
-            nội dung nào mà họ mong muốn mà không gặp giới hạn nào.
+            {text}
           </Typography>
+
+          <Typography variant="h4" id="section3">3. Ứng dụng</Typography>
+          <Typography variant="body1" className="mb-8 text-lg leading-relaxed">
+            {text}
+          </Typography>
+
           <Divider className="my-6" />
           <Box className="mt-8 space-x-2 space-y-4">
             <Typography variant="h5" className="mb-4">
@@ -115,11 +125,12 @@ const PostPage: NextPage<PostPageProps> = ({ post }) => {
           </Box>
         </Grid>
 
-        <Grid item xs={12} md={3}>
-          <CourseList></CourseList>
+        <Grid item xs={12} md={3} className="fixed top-16 right-0">
+          {/* <CourseList></CourseList> */}
+          <TableOfContents/>
         </Grid>
+
       </Grid>
-      
     </Layout>
   );
 };
@@ -148,7 +159,7 @@ export const getStaticProps: GetStaticProps<PostPageProps, Params> = async (
   try {
     console.time("fectchPostData");
     const res = await fetch(`http://localhost:3000/api/posts?id=${id}`);
-    
+
     if (!res.ok) {
       console.error(`Error fetching post: ${res.status} ${res.statusText}`);
       return { props: { post: null } };

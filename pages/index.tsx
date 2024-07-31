@@ -58,7 +58,7 @@ const HomePage = ({ posts }) => {
             </Typography>
             <Grid container spacing={4} className="mt-4">
               {posts.map((post: Post) => (
-                <Grid xs={12} sm={6} className="mb-8">
+                <Grid key={post._id} xs={12} sm={6} className="mb-8">
                   <TestCard content={true} post={post} />
                 </Grid>
               ))}
