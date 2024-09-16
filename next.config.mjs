@@ -5,25 +5,11 @@ const nextConfig = {
     domains: ['cdn.hoanghamobile.com'],
     domains: ['blog.estudyme.com']
   },
+  reactStrictMode: false,
   typescript: {
     ignoreBuildErrors: true,
   },
   output: "standalone",
-  // async redirects() {
-  //   return [
-  //     {
-  //       source: '/dashboard',
-  //       has: [
-  //         {
-  //           type: 'cookie',
-  //           key: 'token',
-  //         },
-  //       ],
-  //       destination: '/',
-  //       permanent: false,
-  //     },
-  //   ];
-  // },
 };
 
 export default nextConfig;

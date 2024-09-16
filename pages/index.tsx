@@ -1,69 +1,52 @@
 import React, { useEffect } from "react";
 import Layout from "../components/Layout";
-import { Box, Container, Grid, Typography } from "@mui/material";
+import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import TestCard from "../components/testCard";
-import { useUser } from "../lib/UserContext";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
 import { Post } from "../types";
-// export interface Post {
-//     _id: number;
-//     title: string;
-//     content: string;
-//     createdAt: string;
-//     author: {
-//       name: string;
-//       avatar: string;
-//     };
-//     date: string;
-//     tag: string[];
-//   }
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { incrementByAmount } from "../features/counter/couterSlice";
+import { requestVerifiToken } from "../features/user/userSlice";
+
 const HomePage = ({ posts }) => {
-  const { user, setUser } = useUser();
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const { loaded, user } = useAppSelector((state) => state.user);
   useEffect(() => {
-    const verifyToken = async () => {
-      try {
-        const response = await fetch("/api/auth/verify-token", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include", // Để gửi cookie cùng với request
-        });
-
-        const data = await response.json();
-        console.log("data: ", data);
-        if (!data.isValid) {
-          router.push("/login");
-        } else {
-          setUser(data.user);
-        }
-      } catch (error) {
-        console.error("Error verifying token:", error);
-        router.push("/login");
-      }
-    };
-
-    verifyToken();
+    dispatch(requestVerifiToken());
   }, []);
+  useEffect(() => {
+    if (loaded) {
+      if (user) {
+        console.log("da login");
+      }
+      else {
+        console.log("chua login");
+        router.push("/login");
+      } 
+    }
+  }, [loaded, user]);
   return (
     <Layout>
-      <Container className="">
+      <Container>
+        <h1 className="mt-2">Home Page</h1>
+        <Typography variant="h4" className="font-bold mb-16 ">
+          Blog
+        </Typography>
         <Grid container spacing={4} className="">
-          <Grid item xs={12} sm={9} className="flex-row">
-            <h1 className="mt-2">Home Page</h1>
-            <Typography variant="h4" className="font-bold mb-4 mt-2">
-              Blog
-            </Typography>
-            <Grid container spacing={4} className="mt-4">
-              {posts.map((post: Post) => (
-                <Grid key={post._id} xs={12} sm={6} className="mb-8">
-                  <TestCard content={true} post={post} />
-                </Grid>
-              ))}
-            </Grid>
-              {/* <TestCard content={true} posts={posts} />
+          <Grid item xs={12} sm={9}>
+            <div className="">
+              <Grid container spacing={2} className="">
+                {posts.map((post: Post) => (
+                  <Grid key={post._id} xs={12} sm={6} className="mb-8">
+                    <TestCard content={true} post={post} />
+                  </Grid>
+                ))}
+              </Grid>
+            </div>
+
+            {/* <TestCard content={true} posts={posts} />
               <TestCard content={true} /> */}
             {/* {posts.map((post: Post) => (
               <Grid xs={12} sm={6}>
@@ -89,6 +72,13 @@ const HomePage = ({ posts }) => {
           </Grid>
         </Grid>
       </Container>
+      <Button
+        onClick={() => {
+          dispatch(incrementByAmount(3));
+        }}
+      >
+        +
+      </Button>
     </Layout>
   );
 };

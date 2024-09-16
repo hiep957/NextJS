@@ -4,13 +4,18 @@ import type { AppProps } from "next/app";
 import ErrorBoundary from "../components/ErrorBoundary";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { UserProvider } from "../lib/UserContext";
+
+import { Provider } from "react-redux";
+import { store } from "../app/store";
+import { PersistGate } from "redux-persist/integration/react";
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <UserProvider>
-      <Component {...pageProps} />
-      <ToastContainer position="bottom-right" />
-    </UserProvider>
+    <Provider store={store}>
+      {/* <PersistGate loading={null} persistor={persistor}> */}
+        <Component {...pageProps} />
+        <ToastContainer position="bottom-right" />
+      {/* </PersistGate> */}
+    </Provider>
   );
 }
 

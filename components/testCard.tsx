@@ -13,7 +13,7 @@ type TestCardProps = {
 const TestCard = ({ content, post }: TestCardProps) => {
   // let formattedDate = format(new Date(post?.date), "MM/dd/yyyy");
   return (
-    <div>
+    <div style={{ position: "relative"}}>
       {/* <div>img</div> */}
       <Link href={`/posts/${post._id}`} passHref>
         <a>
@@ -23,6 +23,7 @@ const TestCard = ({ content, post }: TestCardProps) => {
             height={228}
             alt="Pic"
             className="cursor-pointer"
+            objectFit="contain"
           ></Image>
         </a>
       </Link>

@@ -67,7 +67,7 @@ const TableOfContents: React.FC = () => {
   };
 
   return (
-    <div className="bg-white mr-8 rounded p-4 scroll-m-1 flex flex-col">
+    <div className="bg-white mr-8 rounded p-4 scroll-m-1 flex flex-col w-[300px]">
       <h2 className="flex justify-center mb-2">Mục lục</h2>
       <ul className="list-none p-0">
         {headings.map((heading) => (
